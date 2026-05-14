@@ -1,0 +1,60 @@
+{
+  "Mic": {
+    "params": {
+      "audio_device": "default",
+      "samplerate": 16000,
+      "buffer_size": 640,
+      "channels": 1
+    }
+  },
+  "Vad": {
+    "params": {
+      "samplerate": 16000,
+      "repo_or_dir": "snakers4/silero-vad",
+      "model_name": "silero_vad",
+      "no_voice_wait_sec": 1
+    }
+  },
+  "Stt_Local": {
+    "params": {
+      "base_url": "http://localhost:8000/v1",
+      "model_name": "Systran/faster-whisper-small",
+      "language": "en"
+    }
+  },
+  "Llm_Local": {
+    "params": {
+      "base_url": "http://localhost:11434/v1",
+      "model_name": "gemma3:1b",
+      "system_message": "",
+      "system_message_file": "" 
+    }
+  },
+  "Tts_Local": {
+    "params": {
+      "base_url": "http://localhost:8880/v1",
+      "model_name": "kokoro",
+      "voice": "am_eric",
+      "language": "en"
+    }
+  },
+  "Ap": {
+    "params": {
+      "audio_device": "default",
+      "samplerate": 24000,
+      "buffer_size": 960,
+      "channels": 1,
+      "assets": {
+        "listening_sound": "assets/listening.wav",
+        "transition_sound": "assets/transition.wav"
+      }
+    }
+  },
+  "Ui": {
+    "params": {
+      "window_title": "Adam Hybrid",
+      "window_width": 512,
+      "window_height": 512
+    }
+  }
+}

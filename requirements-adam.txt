@@ -1,0 +1,17 @@
+# UI and Images
+Pillow==10.4.0
+
+# Audio IO
+PyAudio==0.2.14
+soundfile==0.12.1
+scipy==1.14.0
+numpy==1.26.4
+
+# AI Core (VAD)
+torch==2.4.1
+torchaudio==2.4.1
+
+# AI Cloud Services (Groq & TTS)
+groq
+edge-tts
+python-dotenv

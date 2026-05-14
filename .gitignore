@@ -1,0 +1,29 @@
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VSCode
+.vscode/
+
+# assets
+assets/
+assets.zip
+
+# Virtual Environments
+venv/
+env/
+.env
+venv-creator/
+venv-adam/
+
+# User generated files
+*.wav
+*.json
+!configs/default.json
+!locales.json
+
+# OS generated files
+.DS_Store
+Thumbs.db
