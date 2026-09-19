@@ -118,11 +118,4 @@ Ensure your environment is active and the assets are unzipped in the project fol
 python runtime/main.py --profile path/to/your/profile.json
 ```
 
-### Quick Commands
-
-*   **SPACE** → Mute / Unmute microphone
-*   **RESET Enter key** → Clear conversation memory
-*   **LANG MENU (UI)** → Switch between Italian and English in real-time
-*   **ESC** → Close application
-
 ---
