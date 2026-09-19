@@ -6,7 +6,7 @@ class LocalizationManager:
     def __init__(self, locale_file: str = "locales.json", default_lang: str = "it"):
         base_path = Path(__file__).parent.parent if "src" in Path(__file__).parts else Path.cwd()
         resolved_path = base_path / locale_file
-        
+
         self.locale_file = str(resolved_path) if resolved_path.exists() else locale_file
         self.current_lang = default_lang
         self.data: Dict[str, Dict[str, str]] = {}
@@ -23,8 +23,11 @@ class LocalizationManager:
         if lang_code in self.data:
             self.current_lang = lang_code
 
-    def get(self, key: str) -> str:
-        return self.data.get(self.current_lang, {}).get(key, f"MISSING: {key}")
+    def get(self, key: str, default: str | None = None) -> str:
+        val = self.data.get(self.current_lang, {}).get(key)
+        if val is not None:
+            return val
+        return default if default is not None else f"MISSING: {key}"
 
     def get_for_lang(self, lang_code: str, key: str) -> str:
         return self.data.get(lang_code, {}).get(key, f"MISSING: {key}")

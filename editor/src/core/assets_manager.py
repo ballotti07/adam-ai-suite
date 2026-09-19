@@ -41,9 +41,10 @@ class AssetManager:
         self.gender = "male"
         self.language = "it"
         self.keys = [c.value if isinstance(c, Cat) else c for c in LAYER_ORDER]
-        
+
         self.assets: Dict[str, List[str]] = {k: [] for k in self.keys}
         self.colors_cache: Dict[str, List[str]] = {}
+        self.background_color = "#ffffff"
         self.current_avatar: Dict[str, Dict[str, Any]] = {
             k: {"item": None, "color": "default", "dx": 0, "dy": 0} for k in self.keys
         }
@@ -113,6 +114,7 @@ class AssetManager:
         self.current_avatar[cat_key]["color"] = color_name
 
     def reset_all(self) -> None:
+        self.background_color = "#ffffff"
         for k in self.keys:
             self.current_avatar[k] = {"item": None, "color": "default", "dx": 0, "dy": 0}
         if self.assets.get("base"):
@@ -130,7 +132,7 @@ class AssetManager:
             if cat_val == "occhiali" and random.random() > 0.5:
                 self.set_smart_item(cat, None)
                 continue
-                
+
             chosen_shape = random.choice(shapes)
             self.set_smart_item(cat, chosen_shape)
             avail_colors = self.get_colors_for_shape(cat, chosen_shape)
@@ -148,11 +150,12 @@ class AssetManager:
              dest_wav_path: str = None, voice_ref_text: str = None) -> bool:
         self.gender = gender
         self.language = language
-        
+
         data = {
             "language": language,
             "gender": gender,
             "avatar": self.current_avatar,
+            "background_color": self.background_color,
             "voice_mode": voice_mode,
             "voice_cloning": (voice_mode == "cloned")
         }
@@ -163,12 +166,12 @@ class AssetManager:
                     shutil.copy(temp_recording_path, dest_wav_path)
                     json_dir = Path(json_filepath).parent
                     wav_path_obj = Path(dest_wav_path)
-                    
+
                     try:
                         data["voice_ref_path"] = str(wav_path_obj.relative_to(json_dir))
                     except ValueError:
                         data["voice_ref_path"] = str(wav_path_obj)
-                        
+
                     data["voice_ref_text"] = voice_ref_text or ""
                 except Exception:
                     pass
@@ -188,6 +191,7 @@ class AssetManager:
             loaded = data.get("avatar", data)
             self.gender = data.get("gender", self.gender)
             self.language = data.get("language", self.language)
+            self.background_color = data.get("background_color") or (loaded.get("background_color") if isinstance(loaded, dict) else None) or "#ffffff"
 
             if not loaded: return False
 

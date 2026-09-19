@@ -101,6 +101,16 @@ class PreviewRenderer:
 
         self._canvas_w = PREVIEW_DIM[0]
         self._canvas_h = PREVIEW_DIM[1]
+        self.background_color = "#ffffff"
+
+    def set_background_color(self, hex_color: str) -> None:
+        self.background_color = hex_color
+        try:
+            if self.canvas and self.canvas.winfo_exists():
+                self.canvas.configure(bg=hex_color)
+        except Exception:
+            pass
+        self._draw_to_canvas()
 
     @staticmethod
     @lru_cache(maxsize=512)
@@ -250,6 +260,12 @@ class PreviewRenderer:
         if not self._last_composed_raw:
             return
 
+        try:
+            if self.canvas and self.canvas.winfo_exists() and self.canvas.cget("bg") != self.background_color:
+                self.canvas.configure(bg=self.background_color)
+        except Exception:
+            pass
+
         img_w, img_h = self._last_composed_raw.size
         ratio = min(self._canvas_w / img_w, self._canvas_h / img_h)
 
@@ -277,10 +293,18 @@ class PreviewRenderer:
         self._compose_image(current_avatar, file_overrides)
         self._draw_to_canvas()
 
-    def export_image(self, current_avatar: Dict, filepath: str) -> bool:
+    def export_image(self, current_avatar: Dict, filepath: str, bg_color: Optional[str] = None) -> bool:
         try:
             pil_img = self._compose_image(current_avatar, file_overrides=None)
-            pil_img.save(filepath, "PNG")
+            col = bg_color or self.background_color
+            if col and col.lower() != "transparent":
+                from PIL import ImageColor
+                rgb = ImageColor.getrgb(col)
+                solid = Image.new("RGBA", pil_img.size, (*rgb, 255))
+                solid.alpha_composite(pil_img)
+                solid.save(filepath, "PNG")
+            else:
+                pil_img.save(filepath, "PNG")
             return True
         except Exception as e:
             logging.error(f"[Export Error]: {e}")

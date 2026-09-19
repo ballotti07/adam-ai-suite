@@ -1,6 +1,7 @@
 import time
 import numpy as np
 from enum import Enum
+import threading
 
 from core.vad import Vad
 from core.stt import Stt
@@ -45,12 +46,14 @@ class Adam:
         self.mic_last_chunk = None
         self.do_quit = False
         self.is_profile_loaded = False 
+        self.current_gender = "male" 
         self.ui.set_callbacks(
             on_toggle_mute=self.on_toggle_mute,
             on_reset_chat=self.on_reset_chat,
             on_exit=self.on_exit,
             on_profile_loaded=self.on_profile_loaded,
-            on_language_change=self.on_language_change
+            on_language_change=self.on_language_change,
+            on_send_text=self.on_send_text
         )
 
     def on_profile_loaded(self, profile_data):
@@ -119,6 +122,46 @@ class Adam:
             self.llm.reset_chat()
             self.ui.clear_chat()
             self.ui.update_status("⚠️ MEMORIA PULITA", "#e67e22")
+
+    def on_send_text(self, text):
+        if not self.is_profile_loaded or not text or not text.strip():
+            return
+        if self.state == State.TALK:
+            return
+        threading.Thread(target=self._process_text_turn, args=(text.strip(),), daemon=True).start()
+
+    def _process_text_turn(self, text):
+        was_listening = (self.state == State.LISTEN) and not self.mic_muted
+        if was_listening:
+            self.mic.mute()
+        self.set_state(State.TALK)
+        self.ui.update_audio_level(0)
+        self.ui.update_status("🟡 ELABORAZIONE...", "#f1c40f")
+        self.ui.log_message("user says", text)
+
+        turn_reminder = " [SYSTEM DIRECTIVE: Answer strictly in English!]" if getattr(self.stt, 'language', 'it') == "en" else " [SYSTEM DIRECTIVE: Rispondi in Italiano!]"
+        self.llm.get_answer(
+            self.ap,
+            self.tts,
+            audio_bytes=None,
+            reminder=turn_reminder,
+            on_answer_callback=self.on_answer,
+            on_transcript_callback=None,
+            user_text=text,
+            gender=self.current_gender
+        )
+
+        if was_listening:
+            self.mic.unmute()
+            self.mic_muted = False
+            self.vad.reset_vad()
+            self.set_state(State.LISTEN)
+            self.ui.listen()
+            self.ui.update_status("⚪ PRONTO (Parla pure...)", "#2ecc71")
+        else:
+            self.set_state(State.IDLE)
+            self.ui.idle()
+            self.ui.update_status("🟢 PRONTO (Premi SPAZIO per parlare)", "#2ecc71")
 
     def on_exit(self):
         self.do_quit = True
@@ -251,7 +294,7 @@ class Adam:
                         self.mic.unmute()
                         skip_sleep = True
                         
-            elif self.mic.is_muted() and self.state != State.IDLE:
+            elif self.mic.is_muted() and self.state == State.LISTEN:
                 self.set_state(State.IDLE)
                 self.ui.idle()
                 

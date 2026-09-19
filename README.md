@@ -52,15 +52,9 @@ Create a virtual environment, install lightweight dependencies, and launch:
 
 ```bash
 python -m venv venv-creator
-
-# Windows
 venv-creator\Scripts\activate
-
-# Linux/Mac
-source venv-creator/bin/activate
-
 pip install -r requirements-creator.txt
-python editor/src/main.py
+python editor/main.py
 ```
 
 ---
@@ -102,13 +96,7 @@ Create a separate runtime environment and install full dependencies:
 
 ```bash
 python -m venv venv-adam
-
-# Windows
 venv-adam\Scripts\activate
-
-# Linux/Mac
-source venv-adam/bin/activate
-
 pip install -r requirements-adam.txt
 ```
 
@@ -127,7 +115,6 @@ This version of Adam AI uses **Groq Cloud API** for LLM and STT, and **Edge-TTS*
 Ensure your environment is active and the assets are unzipped in the project folder:
 
 ```bash
-# Activate runtime environment first
 python runtime/main.py --profile path/to/your/profile.json
 ```
 

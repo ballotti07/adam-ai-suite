@@ -22,7 +22,7 @@ def color_to_hex(color_name: str | None, fallback: str = DEFAULT_HEX_FALLBACK) -
 def pick_default_color(cat_key: str, available_colors: Iterable[str]) -> str:
     available = list(available_colors)
     if not available: return "default"
-    
+
     for pref in DEFAULT_COLOR_PREFERENCES.get(cat_key, []):
         if pref in available:
             return pref

@@ -1,29 +1,42 @@
-# Python caches
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
 
-# VSCode
 .vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
 
-# assets
-assets/
-assets.zip
-
-# Virtual Environments
 venv/
 env/
 .env
-venv-creator/
-venv-adam/
+.env.*
+venv-*/
 
-# User generated files
+assets/
+assets.zip
+
 *.wav
 *.json
 !configs/default.json
-!locales.json
+!editor/src/locales.json
+runtime/prompt/prompt_da_profilo.txt
+runtime/temp_run.json
 
-# OS generated files
+settings.json
+
+*.mp3
+*.mp4
+video/
+
+*.pdf
+generate_autointervista_pdf.py
+fix domande.txt
+titolo_adam_hackersgen.png
+
 .DS_Store
 Thumbs.db
+ehthumbs.db
+desktop.ini

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Tuple, Dict
 
-APP_NAME = "ADAM CREATOR PRO - Unified Canvas"
+APP_NAME = "ADAM CREATOR"
 WINDOW_SIZE = "1400x900"
 PREVIEW_DIM = (512, 512)
 
