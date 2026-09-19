@@ -106,7 +106,7 @@ pip install -r requirements-adam.txt
 
 This version of Adam AI uses **Groq Cloud API** for LLM and STT, and **Edge-TTS** for voice generation. 
 
-**No local Docker or WSL services are required.** Simply ensure your `GROQ_API_KEY` is configured in your environment variables or in the `.env` file within the `runtime/` folder.
+**No local Docker or WSL services are required.** Simply ensure your `GROQ_API_KEY` is configured in the application.
 
 ---
 
